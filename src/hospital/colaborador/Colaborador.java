@@ -1,7 +1,6 @@
 package hospital.colaborador;
 
-// Classe que representa UM colaborador do hospital.
-// Ela só guarda os dados: atributos privados + construtor + getters.
+
 public class Colaborador {
 
     private String matricula;
@@ -12,12 +11,12 @@ public class Colaborador {
     private String turno;
     private String horasSono;
     private String nivelEstresse;
-    private String exercicio;     // "Sim" ou "Não"
-    private String fumante;       // "Sim" ou "Não"
+    private String exercicio;     
+    private String fumante;       
     private String alimentacao;
-    private String saudeMental;   // ex.: "Ansiedade, Burnout" ou "Nenhuma"
+    private String saudeMental;   
 
-    // Construtor: recebe todos os dados e guarda nos atributos
+  
     public Colaborador(String matricula, String nome, int idade, String cargo, String setor,
                        String turno, String horasSono, String nivelEstresse, String exercicio,
                        String fumante, String alimentacao, String saudeMental) {
@@ -35,7 +34,7 @@ public class Colaborador {
         this.saudeMental = saudeMental;
     }
 
-    // Getters: servem para ler os atributos (que são privados)
+  
     public String getMatricula() { return matricula; }
     public String getNome() { return nome; }
     public int getIdade() { return idade; }
