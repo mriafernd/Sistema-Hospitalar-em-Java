@@ -8,21 +8,19 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
-// Janela principal do sistema.
-// "extends JFrame" = a classe É uma janela.
-// "implements ActionListener" = a classe sabe reagir a cliques de botão.
+
 public class TelaPrincipal extends JFrame implements ActionListener {
 
     private ColaboradorRepositorio repositorio;
 
-    // ---------- Campos de digitar ----------
+   
     private JTextField txtMatricula = new JTextField();
     private JTextField txtNome = new JTextField();
     private JTextField txtIdade = new JTextField();
     private JTextField txtCargo = new JTextField();
     private JTextField txtSetor = new JTextField();
 
-    // ---------- Listas de opções (a primeira opção é sempre "Selecione...") ----------
+
     private JComboBox<String> cmbTurno = new JComboBox<>(
             new String[]{"Selecione...", "Diurno", "Noturno", "Plantão 12h", "Plantão 24h", "Misto"});
     private JComboBox<String> cmbSono = new JComboBox<>(
@@ -36,7 +34,7 @@ public class TelaPrincipal extends JFrame implements ActionListener {
     private JComboBox<String> cmbAlimentacao = new JComboBox<>(
             new String[]{"Selecione...", "Ruim", "Regular", "Boa", "Ótima"});
 
-    // ---------- Caixinhas de marcar (saúde mental) ----------
+   
     private JCheckBox chkAnsiedade = new JCheckBox("Ansiedade");
     private JCheckBox chkDepressao = new JCheckBox("Depressão");
     private JCheckBox chkBurnout = new JCheckBox("Burnout");
@@ -44,41 +42,41 @@ public class TelaPrincipal extends JFrame implements ActionListener {
     private JCheckBox chkInsonia = new JCheckBox("Insônia");
     private JCheckBox chkOutra = new JCheckBox("Outra");
 
-    // ---------- Filtro ----------
+
     private JComboBox<String> cmbFiltro = new JComboBox<>();
     private JButton btnFiltrar = new JButton("Filtrar");
 
-    // ---------- Botões ----------
+
     private JButton btnCadastrar = new JButton("Cadastrar");
     private JButton btnRemover = new JButton("Remover");
     private JButton btnLimpar = new JButton("Limpar");
 
-    // ---------- Tabela ----------
+  
     private DefaultTableModel modelo;
     private JTable tabela;
 
-    // Construtor: configura a janela e coloca as 3 partes dentro dela
+   
     public TelaPrincipal(ColaboradorRepositorio repositorio) {
         this.repositorio = repositorio;
 
         setTitle("Sistema Hospitalar - Cadastro de Colaboradores");
         setSize(1250, 720);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);   // fechar a janela encerra o programa
-        setLocationRelativeTo(null);               // abre no centro da tela
+        setDefaultCloseOperation(EXIT_ON_CLOSE);   
+        setLocationRelativeTo(null);               
         setLayout(new BorderLayout());
 
-        add(criarFormulario(), BorderLayout.NORTH);    // formulário em cima
-        add(criarTabela(), BorderLayout.CENTER);       // tabela no meio
-        add(criarBotoes(), BorderLayout.SOUTH);        // botões embaixo
+        add(criarFormulario(), BorderLayout.NORTH);    
+        add(criarTabela(), BorderLayout.CENTER);       
+        add(criarBotoes(), BorderLayout.SOUTH);        
 
-        atualizarTela();   // mostra os dados que vieram do CSV
+        atualizarTela();   
     }
 
-    // ---------- Montagem da tela (uma parte por método) ----------
+   
 
-    // Parte de cima: campos do formulário + caixinhas de saúde mental
+   
     private JPanel criarFormulario() {
-        // Os campos ficam em uma grade de 4 colunas: rótulo, campo, rótulo, campo
+     
         JPanel painelCampos = new JPanel(new GridLayout(0, 4, 8, 8));
         painelCampos.add(new JLabel("Matrícula:"));
         painelCampos.add(txtMatricula);
@@ -115,7 +113,7 @@ public class TelaPrincipal extends JFrame implements ActionListener {
         painelSaude.add(chkInsonia);
         painelSaude.add(chkOutra);
 
-        // Junta os dois painéis: campos em cima, saúde mental embaixo
+        
         JPanel painelTopo = new JPanel(new BorderLayout());
         painelTopo.add(painelCampos, BorderLayout.CENTER);
         painelTopo.add(painelSaude, BorderLayout.SOUTH);
@@ -126,9 +124,9 @@ public class TelaPrincipal extends JFrame implements ActionListener {
     private JPanel criarTabela() {
         String[] colunas = {"Matrícula", "Nome", "Idade", "Cargo", "Setor", "Turno", "Sono",
                 "Estresse", "Exercício", "Fumante", "Alimentação", "Saúde mental"};
-        modelo = new DefaultTableModel(colunas, 0);   // guarda os dados (0 linhas no começo)
-        tabela = new JTable(modelo);                  // mostra os dados do modelo
-        tabela.setDefaultEditor(Object.class, null);  // não deixa editar direto na tabela
+        modelo = new DefaultTableModel(colunas, 0);  
+        tabela = new JTable(modelo);                 
+        tabela.setDefaultEditor(Object.class, null);  
 
         JPanel painelFiltro = new JPanel();
         painelFiltro.add(new JLabel("Filtrar por matrícula:"));
@@ -142,24 +140,21 @@ public class TelaPrincipal extends JFrame implements ActionListener {
         return painelTabela;
     }
 
-    // Parte de baixo: os 3 botões
+   
     private JPanel criarBotoes() {
         JPanel painelBotoes = new JPanel();
         painelBotoes.add(btnCadastrar);
         painelBotoes.add(btnRemover);
         painelBotoes.add(btnLimpar);
 
-        // "this" = esta janela vai tratar os cliques
+       
         btnCadastrar.addActionListener(this);
         btnRemover.addActionListener(this);
         btnLimpar.addActionListener(this);
         return painelBotoes;
     }
 
-    // ---------- Cliques ----------
-
-    // Chamado automaticamente quando um botão é clicado.
-    // "e.getSource()" diz qual botão foi clicado.
+  
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnCadastrar) {
             cadastrar();
@@ -175,10 +170,10 @@ public class TelaPrincipal extends JFrame implements ActionListener {
     private void cadastrar() {
         Colaborador novo = lerFormulario();
         if (novo == null) {
-            return;   // dados inválidos (a mensagem de erro já foi mostrada)
+            return;   
         }
 
-        // Não permite duas matrículas iguais
+       
         if (repositorio.buscar(novo.getMatricula()) != null) {
             JOptionPane.showMessageDialog(this, "Já existe um colaborador com essa matrícula.");
             return;
@@ -191,13 +186,13 @@ public class TelaPrincipal extends JFrame implements ActionListener {
     }
 
     private void remover() {
-        int linha = tabela.getSelectedRow();   // -1 significa que nenhuma linha foi escolhida
+        int linha = tabela.getSelectedRow();  
         if (linha == -1) {
             JOptionPane.showMessageDialog(this, "Selecione um colaborador na tabela.");
             return;
         }
 
-        String matricula = (String) modelo.getValueAt(linha, 0);   // coluna 0 = matrícula
+        String matricula = (String) modelo.getValueAt(linha, 0);   
         int resposta = JOptionPane.showConfirmDialog(this,
                 "Deseja remover o colaborador " + matricula + "?",
                 "Confirmar", JOptionPane.YES_NO_OPTION);
@@ -208,18 +203,17 @@ public class TelaPrincipal extends JFrame implements ActionListener {
         }
     }
 
-    // Mostra na tabela só a matrícula escolhida no filtro (ou todas)
+    
     private void filtrar() {
         String escolhida = (String) cmbFiltro.getSelectedItem();
         atualizarTabela(escolhida);
     }
 
-    // ---------- Formulário ----------
+  
 
-    // Lê os campos da tela, confere se estão corretos e devolve um Colaborador.
-    // Se algo estiver errado, mostra uma mensagem e devolve null.
+    
     private Colaborador lerFormulario() {
-        // trim() tira espaços sobrando; replace troca ";" por "," para não quebrar o CSV
+       
         String matricula = txtMatricula.getText().trim().replace(";", ",");
         String nome = txtNome.getText().trim().replace(";", ",");
         String cargo = txtCargo.getText().trim().replace(";", ",");
@@ -243,7 +237,7 @@ public class TelaPrincipal extends JFrame implements ActionListener {
             return null;
         }
 
-        // Posição 0 da lista = "Selecione...", ou seja, a pessoa não escolheu nada
+     
         if (cmbTurno.getSelectedIndex() == 0 || cmbSono.getSelectedIndex() == 0
                 || cmbEstresse.getSelectedIndex() == 0 || cmbExercicio.getSelectedIndex() == 0
                 || cmbFumante.getSelectedIndex() == 0 || cmbAlimentacao.getSelectedIndex() == 0) {
@@ -281,7 +275,7 @@ public class TelaPrincipal extends JFrame implements ActionListener {
         chkOutra.setSelected(false);
     }
 
-    // Junta as caixinhas marcadas em um texto. Ex.: "Ansiedade, Burnout"
+    
     private String lerSaudeMental() {
         String texto = "";
         if (chkAnsiedade.isSelected()) {
@@ -306,18 +300,16 @@ public class TelaPrincipal extends JFrame implements ActionListener {
         if (texto.isEmpty()) {
             return "Nenhuma";
         }
-        return texto.substring(0, texto.length() - 2);   // tira a última ", "
+        return texto.substring(0, texto.length() - 2);   
     }
 
-    // ---------- Tabela e filtro ----------
-
-    // Atualiza o filtro e mostra todos na tabela
+   
     private void atualizarTela() {
         atualizarFiltro();
         atualizarTabela("Todas");
     }
 
-    // Recarrega a lista de matrículas do filtro
+    
     private void atualizarFiltro() {
         cmbFiltro.removeAllItems();
         cmbFiltro.addItem("Todas");
@@ -326,10 +318,9 @@ public class TelaPrincipal extends JFrame implements ActionListener {
         }
     }
 
-    // Preenche a tabela. Se o filtro for "Todas", mostra todo mundo;
-    // senão, mostra só o colaborador com aquela matrícula.
+    
     private void atualizarTabela(String filtro) {
-        modelo.setRowCount(0);   // apaga as linhas atuais
+        modelo.setRowCount(0);   
 
         for (Colaborador c : repositorio.getLista()) {
             if (filtro.equals("Todas") || c.getMatricula().equals(filtro)) {
